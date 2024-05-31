@@ -1,4 +1,15 @@
 <p>list works!</p>
+<div class="search-container">
+  <mat-form-field appearance="outline">
+    <mat-label>Buscar por id</mat-label>
+    <input matInput type="text" />
+    <button mat-icon-button matSuffix aria-label="Buscar por id">
+      <mat-icon>search</mat-icon>
+    </button>
+  </mat-form-field>
+  <button mat-flat-button color="primary">Crear</button>
+</div>
+
 <div class="card-container">
   @if (users$() | async; as users) { @for (user of users.data; track $index) {
   <mat-card class="example-card card-item">

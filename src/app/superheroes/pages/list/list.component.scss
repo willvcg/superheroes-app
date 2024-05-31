@@ -1,3 +1,11 @@
+.search-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  align-items: baseline;
+  gap: 16px;
+}
+
 .example-card {
   max-width: 400px;
 }
