@@ -1,20 +1,13 @@
 import { AsyncPipe, JsonPipe } from '@angular/common';
-import { Component, Inject, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
-} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { DialogAnimationsExampleDialog } from '../../../components/dialog-animations-example-dialog/dialog-animations-example-dialog';
 import { SuperheroesService } from '../../../services/superheroes.service';
 @Component({
   selector: 'app-list',
@@ -28,6 +21,7 @@ import { SuperheroesService } from '../../../services/superheroes.service';
     MatInputModule,
     MatFormFieldModule,
     RouterLink,
+    DialogAnimationsExampleDialog,
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
@@ -74,27 +68,27 @@ export class ListComponent {
   }
 }
 
-@Component({
-  selector: 'dialog-animations-example-dialog',
-  templateUrl: 'dialog-animations-example-dialog.html',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatDialogActions,
-    MatDialogClose,
-    MatDialogTitle,
-    MatDialogContent,
-  ],
-})
-export class DialogAnimationsExampleDialog {
-  private readonly superheroesService = inject(SuperheroesService);
+// @Component({
+//   selector: 'dialog-animations-example-dialog',
+//   templateUrl: 'dialog-animations-example-dialog.html',
+//   standalone: true,
+//   imports: [
+//     MatButtonModule,
+//     MatDialogActions,
+//     MatDialogClose,
+//     MatDialogTitle,
+//     MatDialogContent,
+//   ],
+// })
+// export class DialogAnimationsExampleDialog {
+//   private readonly superheroesService = inject(SuperheroesService);
 
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { id: number },
-    public dialogRef: MatDialogRef<DialogAnimationsExampleDialog>
-  ) {}
+//   constructor(
+//     @Inject(MAT_DIALOG_DATA) public data: { id: number },
+//     public dialogRef: MatDialogRef<DialogAnimationsExampleDialog>
+//   ) {}
 
-  protected deleteUser(): void {
-    this.superheroesService.deleteUser(this.data.id);
-  }
-}
+//   protected deleteUser(): void {
+//     this.superheroesService.deleteUser(this.data.id);
+//   }
+// }
