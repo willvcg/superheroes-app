@@ -1,7 +1,16 @@
 import { AsyncPipe, JsonPipe } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, Inject, computed, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle,
+} from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -27,6 +36,7 @@ export class ListComponent {
   private readonly superheroesService = inject(SuperheroesService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly dialog = inject(MatDialog);
 
   protected users$ = computed(() => this.superheroesService.getUsers());
 
@@ -48,5 +58,43 @@ export class ListComponent {
     this.router.navigate(['../create'], {
       relativeTo: this.route,
     });
+  }
+
+  protected openDialog(
+    enterAnimationDuration: string,
+    exitAnimationDuration: string,
+    id: number
+  ): void {
+    this.dialog.open(DialogAnimationsExampleDialog, {
+      width: '250px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+      data: { id },
+    });
+  }
+}
+
+@Component({
+  selector: 'dialog-animations-example-dialog',
+  templateUrl: 'dialog-animations-example-dialog.html',
+  standalone: true,
+  imports: [
+    MatButtonModule,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogTitle,
+    MatDialogContent,
+  ],
+})
+export class DialogAnimationsExampleDialog {
+  private readonly superheroesService = inject(SuperheroesService);
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: { id: number },
+    public dialogRef: MatDialogRef<DialogAnimationsExampleDialog>
+  ) {}
+
+  protected deleteUser(): void {
+    this.superheroesService.deleteUser(this.data.id);
   }
 }
