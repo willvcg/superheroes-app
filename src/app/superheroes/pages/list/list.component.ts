@@ -6,7 +6,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { delay } from 'rxjs';
 import { DialogComponent } from '../../../components/dialog/dialog-animations-example-dialog';
 import { SuperheroesService } from '../../../services/superheroes.service';
 @Component({
@@ -21,6 +23,7 @@ import { SuperheroesService } from '../../../services/superheroes.service';
     MatInputModule,
     MatFormFieldModule,
     RouterLink,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
@@ -31,7 +34,9 @@ export class ListComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly dialog = inject(MatDialog);
 
-  protected users$ = computed(() => this.superheroesService.getUsers());
+  protected users$ = computed(() =>
+    this.superheroesService.getUsers().pipe(delay(1000))
+  );
 
   protected user$ = computed(() => this.superheroesService.getUser());
 
