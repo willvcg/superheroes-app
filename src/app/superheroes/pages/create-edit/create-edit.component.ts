@@ -1,3 +1,4 @@
+import { UpperCasePipe } from '@angular/common';
 import {
   Component,
   OnInit,
@@ -43,6 +44,7 @@ const image = 'https://www.superherodb.com/pictures2/portraits/10/100/1007.jpg';
     MatFormFieldModule,
     MatButtonModule,
     MatError,
+    UpperCasePipe,
   ],
   templateUrl: './create-edit.component.html',
   styleUrl: './create-edit.component.scss',

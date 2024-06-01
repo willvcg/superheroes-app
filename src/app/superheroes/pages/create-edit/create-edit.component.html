@@ -10,7 +10,12 @@
       <form [formGroup]="form" (submit)="onSubmit()">
         <mat-form-field appearance="outline" class="input-form">
           <mat-label>Nombre</mat-label>
-          <input matInput formControlName="name" required />
+          <input
+            matInput
+            formControlName="name"
+            required
+            [value]="form.controls.name.value | uppercase"
+          />
           @if (form.controls.name.invalid) {
           <mat-error>El nombre es obligatorio</mat-error>
           }
