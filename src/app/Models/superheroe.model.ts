@@ -3,5 +3,5 @@ export interface superheroe {
   name: string;
   fullName: string;
   publisher: string;
-  image?: string;
+  image: string;
 }

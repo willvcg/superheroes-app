@@ -36,17 +36,13 @@ export class ListComponent {
   private readonly dialog = inject(MatDialog);
 
   protected searchValue = signal<string>('');
-  protected users$ = computed(() => {
+  protected superHeroes$ = computed(() => {
     const searchValue = this.searchValue();
     if (searchValue) {
-      return this.superheroesService.getSuperhero(searchValue);
+      return this.superheroesService.getSuperheroesByName(searchValue);
     }
     return this.superheroesService.getSuperheroes();
   });
-
-  protected user$ = computed(() =>
-    this.superheroesService.getSuperhero('Batman')
-  );
 
   protected goEdit(id: string): void {
     this.router.navigate(['../edit', id], {
