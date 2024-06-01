@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { debouncedSignal } from '../../../Utils/utils';
 import { DialogComponent } from '../../../components/dialog/dialog-animations-example-dialog';
 import { SuperheroesService } from '../../../services/superheroes.service';
 @Component({
@@ -36,10 +37,11 @@ export class ListComponent {
   private readonly dialog = inject(MatDialog);
 
   protected searchValue = signal<string>('');
+  protected debouncedSearchValue = debouncedSignal(this.searchValue);
   protected superHeroes$ = computed(() => {
-    const searchValue = this.searchValue();
-    if (searchValue) {
-      return this.superheroesService.getSuperheroesByName(searchValue);
+    const debouncedSearchValue = this.debouncedSearchValue();
+    if (debouncedSearchValue) {
+      return this.superheroesService.getSuperheroesByName(debouncedSearchValue);
     }
     return this.superheroesService.getSuperheroes();
   });
