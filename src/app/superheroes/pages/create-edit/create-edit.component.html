@@ -1,49 +1,37 @@
 <p>create-edit works!</p>
 <div class="container">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>{{
-        editSuperheroe() ? "Editar heroe" : "Crear heroe"
-      }}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <form [formGroup]="form" (submit)="onSubmit()">
-        <mat-form-field appearance="outline" class="input-form">
-          <mat-label>Nombre</mat-label>
-          <input
-            matInput
-            formControlName="name"
-            required
-            [value]="form.controls.name.value | uppercase"
-          />
-          @if (form.controls.name.invalid) {
-          <mat-error>El nombre es obligatorio</mat-error>
-          }
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="input-form">
-          <mat-label>Nombre completo</mat-label>
-          <input matInput formControlName="fullName" required />
-          @if (form.controls.fullName.invalid) {
-          <mat-error>El nombre completo es obligatorio</mat-error>
-          }
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="input-form">
-          <mat-label>Publicado</mat-label>
-          <input matInput formControlName="publisher" required />
-          @if (form.controls.publisher.invalid) {
-          <mat-error>El campo publicado es obligatorio</mat-error>
-          }
-        </mat-form-field>
-        <br />
-        <button
-          mat-flat-button
-          [disabled]="form.invalid"
-          color="primary"
-          type="submit"
-        >
-          {{ editSuperheroe() ? "Editar" : "Crear" }}
-        </button>
-      </form>
-    </mat-card-content>
-  </mat-card>
+	<mat-card>
+		<mat-card-header>
+			<mat-card-title>{{ editSuperheroe() ? 'Editar heroe' : 'Crear heroe' }}</mat-card-title>
+		</mat-card-header>
+		<mat-card-content>
+			<form [formGroup]="form" (submit)="onSubmit()">
+				<mat-form-field appearance="outline" class="input-form">
+					<mat-label>Nombre</mat-label>
+					<input matInput formControlName="name" required [value]="form.controls.name.value | uppercase" />
+					@if (form.controls.name.invalid) {
+						<mat-error>El nombre es obligatorio</mat-error>
+					}
+				</mat-form-field>
+				<mat-form-field appearance="outline" class="input-form">
+					<mat-label>Nombre completo</mat-label>
+					<input matInput formControlName="fullName" required />
+					@if (form.controls.fullName.invalid) {
+						<mat-error>El nombre completo es obligatorio</mat-error>
+					}
+				</mat-form-field>
+				<mat-form-field appearance="outline" class="input-form">
+					<mat-label>Publicado</mat-label>
+					<input matInput formControlName="publisher" required />
+					@if (form.controls.publisher.invalid) {
+						<mat-error>El campo publicado es obligatorio</mat-error>
+					}
+				</mat-form-field>
+				<br />
+				<button mat-flat-button [disabled]="form.invalid" color="primary" type="submit">
+					{{ editSuperheroe() ? 'Editar' : 'Crear' }}
+				</button>
+			</form>
+		</mat-card-content>
+	</mat-card>
 </div>
