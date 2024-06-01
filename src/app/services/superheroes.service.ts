@@ -1,25 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
-import { Observable } from 'rxjs';
-import {
-  CreateUpdateUserRequest,
-  CreateUserResponse,
-  GetUsersResponse,
-  UsersData,
-} from '../Models/superheroe.model';
+import { Observable, delay, of } from 'rxjs';
 
-export interface paramsPerPage {
-  per_page: number;
+export interface superheroe {
+  id: string;
+  name: string;
+  fullName: string;
+  publisher: string;
+  image?: string;
 }
-
-export const defaultParamsPerPage: paramsPerPage = {
-  per_page: 4,
-};
-
-export const defaultUser: CreateUpdateUserRequest = {
-  name: 'Will',
-  job: 'Developer',
-};
 
 @Injectable({
   providedIn: 'root',
@@ -27,32 +16,69 @@ export const defaultUser: CreateUpdateUserRequest = {
 export class SuperheroesService {
   protected readonly http = inject(HttpClient);
 
-  private url = signal<string>('https://reqres.in/api/users');
+  protected superheroes_mock = signal<superheroe[]>([
+    {
+      id: '1',
+      name: 'Batman II',
+      fullName: 'Dick Grayson',
+      publisher: 'Nightwing',
+      image: 'https://www.superherodb.com/pictures2/portraits/10/100/1496.jpg',
+    },
+    {
+      id: '2',
+      name: 'Aquaman',
+      fullName: 'Orin',
+      publisher: 'DC Comics',
+      image: 'https://www.superherodb.com/pictures2/portraits/10/100/634.jpg',
+    },
+    {
+      id: '3',
+      name: 'Spider-Man',
+      fullName: 'Peter Parker',
+      publisher: 'Marvel Comics',
+      image: 'https://www.superherodb.com/pictures2/portraits/10/100/133.jpg',
+    },
+    {
+      id: '4',
+      name: 'Captain America',
+      fullName: 'Steve Rogers',
+      publisher: 'Marvel Comics',
+      image: 'https://www.superherodb.com/pictures2/portraits/10/100/274.jpg',
+    },
+  ]);
 
-  getUsers(
-    pageId: number = 2,
-    params: paramsPerPage = defaultParamsPerPage
-  ): Observable<UsersData> {
-    return this.http.get<UsersData>(`${this.url()}?page=${pageId}`, {
-      params: { ...params },
-    });
+  getSuperheroes(): Observable<superheroe[]> {
+    return of(this.superheroes_mock()).pipe(delay(300));
   }
 
-  getUser(id: number = 2): Observable<GetUsersResponse> {
-    return this.http.get<GetUsersResponse>(`${this.url()}/${id}`);
+  getSuperhero(name: string): Observable<superheroe[]> {
+    const filteredSuperheroes = this.superheroes_mock().filter((hero) =>
+      hero.name.toLowerCase().includes(name.toLowerCase())
+    );
+    return of(filteredSuperheroes).pipe(delay(300));
   }
 
-  createUser(
-    body: CreateUpdateUserRequest = defaultUser
-  ): Observable<CreateUserResponse> {
-    return this.http.post<CreateUserResponse>(this.url(), body);
+  createSuperhero(newSuperhero: superheroe): Observable<{ success: boolean }> {
+    this.superheroes_mock().push(newSuperhero);
+    return of({ success: true }).pipe(delay(300));
   }
 
-  modifyUser(id: number = 5, body: CreateUpdateUserRequest = defaultUser) {
-    return this.http.put(`${this.url()}/${id}`, body);
+  modifySuperhero(
+    id: string,
+    updatedSuperhero: superheroe
+  ): Observable<{ success: boolean }> {
+    const index = this.superheroes_mock().findIndex((hero) => hero.id === id);
+    if (index !== -1) {
+      this.superheroes_mock()[index] = updatedSuperhero;
+    }
+    return of({ success: true }).pipe(delay(300));
   }
 
-  deleteUser(id: number = 5) {
-    return this.http.delete(`${this.url()}/${id}`);
+  deleteSuperhero(id: string): Observable<{ success: boolean }> {
+    const filteredSuperheroes = this.superheroes_mock().filter(
+      (hero) => hero.id !== id
+    );
+    this.superheroes_mock.set(filteredSuperheroes);
+    return of({ success: true }).pipe(delay(300));
   }
 }
