@@ -13,66 +13,61 @@ import { debouncedSignal } from '../../../Utils/utils';
 import { DialogComponent } from '../../../components/dialog/dialog-animations-example-dialog';
 import { SuperheroesService } from '../../../services/superheroes.service';
 @Component({
-  selector: 'app-list',
-  standalone: true,
-  imports: [
-    JsonPipe,
-    AsyncPipe,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatInputModule,
-    MatFormFieldModule,
-    RouterLink,
-    MatProgressSpinnerModule,
-    FormsModule,
-  ],
-  templateUrl: './list.component.html',
-  styleUrl: './list.component.scss',
+	selector: 'app-list',
+	standalone: true,
+	imports: [
+		JsonPipe,
+		AsyncPipe,
+		MatCardModule,
+		MatButtonModule,
+		MatIconModule,
+		MatInputModule,
+		MatFormFieldModule,
+		RouterLink,
+		MatProgressSpinnerModule,
+		FormsModule
+	],
+	templateUrl: './list.component.html',
+	styleUrl: './list.component.scss'
 })
 export class ListComponent {
-  private readonly superheroesService = inject(SuperheroesService);
-  private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
-  private readonly dialog = inject(MatDialog);
+	private readonly superheroesService = inject(SuperheroesService);
+	private readonly router = inject(Router);
+	private readonly route = inject(ActivatedRoute);
+	private readonly dialog = inject(MatDialog);
 
-  protected searchValue = signal<string>('');
-  protected debouncedSearchValue = debouncedSignal(this.searchValue);
-  protected superHeroes$ = computed(() => {
-    const debouncedSearchValue = this.debouncedSearchValue();
-    if (debouncedSearchValue) {
-      return this.superheroesService.getSuperheroesByName(debouncedSearchValue);
-    }
-    return this.superheroesService.getSuperheroes();
-  });
+	protected searchValue = signal<string>('');
+	protected debouncedSearchValue = debouncedSignal(this.searchValue);
+	protected superHeroes$ = computed(() => {
+		const debouncedSearchValue = this.debouncedSearchValue();
+		if (debouncedSearchValue) {
+			return this.superheroesService.getSuperheroesByName(debouncedSearchValue);
+		}
+		return this.superheroesService.getSuperheroes();
+	});
 
-  protected goEdit(id: string): void {
-    this.router.navigate(['../edit', id], {
-      relativeTo: this.route,
-    });
-  }
+	protected goEdit(id: string): void {
+		this.router.navigate(['../edit', id], {
+			relativeTo: this.route
+		});
+	}
 
-  protected goCreate(): void {
-    this.router.navigate(['../create'], {
-      relativeTo: this.route,
-    });
-  }
+	protected goCreate(): void {
+		this.router.navigate(['../create'], {
+			relativeTo: this.route
+		});
+	}
 
-  protected openDialog(
-    enterAnimationDuration: string,
-    exitAnimationDuration: string,
-    id: string,
-    name: string
-  ): void {
-    this.dialog.open(DialogComponent, {
-      width: '250px',
-      enterAnimationDuration,
-      exitAnimationDuration,
-      data: {
-        id,
-        name,
-        message: `¿Estás seguro de que quieres borrar ${name}?`,
-      },
-    });
-  }
+	protected openDialog(enterAnimationDuration: string, exitAnimationDuration: string, id: string, name: string): void {
+		this.dialog.open(DialogComponent, {
+			width: '250px',
+			enterAnimationDuration,
+			exitAnimationDuration,
+			data: {
+				id,
+				name,
+				message: `¿Estás seguro de que quieres borrar ${name}?`
+			}
+		});
+	}
 }
