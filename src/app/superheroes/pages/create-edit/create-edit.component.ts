@@ -18,11 +18,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { tap } from 'rxjs';
+import { superheroe } from '../../../Models/superheroe.model';
 import { SnackbarComponent } from '../../../components/snackbar/snackbar.component';
-import {
-  SuperheroesService,
-  superheroe,
-} from '../../../services/superheroes.service';
+import { SuperheroesService } from '../../../services/superheroes.service';
 
 const image = 'https://www.superherodb.com/pictures2/portraits/10/100/1007.jpg';
 @Component({
