@@ -1,4 +1,11 @@
-import { Component, inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -40,24 +47,94 @@ const image = 'https://www.superherodb.com/pictures2/portraits/10/100/1007.jpg';
   templateUrl: './create-edit.component.html',
   styleUrl: './create-edit.component.scss',
 })
-export class CreateEditComponent {
+export class CreateEditComponent implements OnInit {
   private readonly superheroesService = inject(SuperheroesService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly snackBar = inject(MatSnackBar);
 
-  form = new FormGroup({
+  protected form = new FormGroup({
     name: new FormControl('', [Validators.required]),
     fullName: new FormControl('', [Validators.required]),
     publisher: new FormControl('', [Validators.required]),
   });
 
+  protected editSuperheroe = computed(() => this.heroeSelectedId());
+
+  protected heroeSelectedId = signal<string | null>(null);
+  protected image = signal<string | null>(null);
+
+  constructor() {
+    this.fillForm();
+  }
+
+  ngOnInit() {
+    this.route.paramMap.subscribe((params) => {
+      this.heroeSelectedId.set(params.get('id'));
+    });
+  }
+
+  protected fillForm() {
+    effect(() => {
+      const heroeSelectedId = this.heroeSelectedId();
+      if (!heroeSelectedId) return;
+      this.superheroesService
+        .getSuperheroById(heroeSelectedId)
+        .pipe(
+          tap((superheroe) => {
+            if (!superheroe) return;
+            const { name, fullName, publisher, image } = superheroe;
+            this.form.patchValue({ name, fullName, publisher });
+            this.image.set(image);
+          })
+        )
+        .subscribe();
+    });
+  }
+
   protected onSubmit() {
     const { name, fullName, publisher } = this.form.value;
     if (!name || !fullName || !publisher || this.form.invalid) return;
+
+    if (this.editSuperheroe()) {
+      this.modifySuperheroe(name, fullName, publisher);
+    } else {
+      this.createSuperheroe(name, fullName, publisher);
+    }
+  }
+
+  protected modifySuperheroe(
+    name: string,
+    fullName: string,
+    publisher: string
+  ) {
+    const heroeSelectedId = this.heroeSelectedId();
+    const image = this.image();
+    if (!heroeSelectedId?.length || !image) return;
+    this.superheroesService
+      .modifySuperhero(heroeSelectedId, {
+        id: heroeSelectedId,
+        name,
+        fullName,
+        publisher,
+        image,
+      })
+      .pipe(
+        tap(() => {
+          this.goList();
+          this.openSnackBar();
+        })
+      )
+      .subscribe();
+  }
+
+  protected createSuperheroe(
+    name: string,
+    fullName: string,
+    publisher: string
+  ) {
     const id = crypto.randomUUID();
     const superheroe: superheroe = { id, name, fullName, publisher, image };
-
     this.superheroesService
       .createSuperhero(superheroe)
       .pipe(
@@ -70,9 +147,16 @@ export class CreateEditComponent {
   }
 
   protected goList(): void {
-    this.router.navigate(['../list'], {
-      relativeTo: this.route,
-    });
+    if (this.editSuperheroe()) {
+      this.router.navigate(['../../list'], {
+        relativeTo: this.route,
+      });
+      return;
+    } else {
+      this.router.navigate(['../list'], {
+        relativeTo: this.route,
+      });
+    }
   }
 
   protected openSnackBar() {
@@ -80,7 +164,9 @@ export class CreateEditComponent {
       duration: 5 * 1000,
       data: {
         id: '1',
-        message: `Superheroe ${this.form.controls.name.value} creado`,
+        message: `Superheroe ${this.form.controls.name.value} ${
+          this.editSuperheroe() ? 'editado' : 'creado'
+        }`,
       },
     });
   }
