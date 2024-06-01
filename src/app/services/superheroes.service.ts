@@ -1,14 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { Observable, delay, of } from 'rxjs';
-
-export interface superheroe {
-  id: string;
-  name: string;
-  fullName: string;
-  publisher: string;
-  image?: string;
-}
+import { superheroe } from '../Models/superheroe.model';
 
 @Injectable({
   providedIn: 'root',
