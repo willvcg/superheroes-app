@@ -29,13 +29,6 @@ export const routes: Routes = [
             (c) => c.CreateEditComponent
           ),
       },
-      {
-        path: 'detail/:id',
-        loadComponent: () =>
-          import('./superheroes/pages/detail/detail.component').then(
-            (c) => c.DetailComponent
-          ),
-      },
     ],
   },
   { path: '', redirectTo: 'superheroes/list', pathMatch: 'full' },
