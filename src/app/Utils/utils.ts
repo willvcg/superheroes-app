@@ -9,3 +9,7 @@ export const debouncedSignal = <T>(
   toSignal(toObservable(input).pipe(debounceTime(timeOutMs)), {
     initialValue: input(),
   });
+
+export const capitalizeFirstLetter = (str: string): string => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};

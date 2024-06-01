@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { Observable, delay, of } from 'rxjs';
 import { superheroe } from '../Models/superheroe.model';
+import { capitalizeFirstLetter } from '../Utils/utils';
 
 @Injectable({
   providedIn: 'root',
@@ -48,6 +49,10 @@ export class SuperheroesService {
     const filteredSuperheroes = this.superheroes_mock().filter((hero) =>
       hero.name.toLowerCase().includes(name.toLowerCase())
     );
+    filteredSuperheroes.forEach((hero) => {
+      hero.name = capitalizeFirstLetter(hero.name);
+    });
+
     return of(filteredSuperheroes).pipe(delay(300));
   }
 
