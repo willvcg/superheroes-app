@@ -1,10 +1,10 @@
-<span class="example-pizza-party" matSnackBarLabel> Pizza party!!! </span>
+<span matSnackBarLabel>{{ data.message }} </span>
 <span matSnackBarActions>
   <button
     mat-button
     matSnackBarAction
     (click)="snackBarRef.dismissWithAction()"
   >
-    🍕
+    ❌
   </button>
 </span>
