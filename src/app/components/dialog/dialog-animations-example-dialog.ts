@@ -9,6 +9,7 @@ import {
   MatDialogTitle,
 } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { tap } from 'rxjs';
 import { SuperheroesService } from '../../services/superheroes.service';
 import { SnackbarComponent } from '../snackbar/snackbar.component';
 @Component({
@@ -28,18 +29,22 @@ export class DialogComponent {
   private readonly snackBar = inject(MatSnackBar);
   private durationInSeconds = signal(5);
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { id: number },
+    @Inject(MAT_DIALOG_DATA)
+    public data: { id: string; name: string; message: string },
     public dialogRef: MatDialogRef<DialogComponent>
   ) {}
 
-  protected deleteUser(): void {
-    this.superheroesService.deleteUser(this.data.id);
-    this.openSnackBar();
+  protected deleteSuperheroe(): void {
+    this.superheroesService
+      .deleteSuperhero(this.data.id)
+      .pipe(tap(() => this.openSnackBar()))
+      .subscribe();
   }
 
   protected openSnackBar() {
     this.snackBar.openFromComponent(SnackbarComponent, {
       duration: this.durationInSeconds() * 1000,
+      data: { id: this.data.id, message: `${this.data.name} borrado` },
     });
   }
 }
