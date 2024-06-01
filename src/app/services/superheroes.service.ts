@@ -44,11 +44,16 @@ export class SuperheroesService {
     return of(this.superheroes_mock()).pipe(delay(300));
   }
 
-  getSuperhero(name: string): Observable<superheroe[]> {
+  getSuperheroesByName(name: string): Observable<superheroe[]> {
     const filteredSuperheroes = this.superheroes_mock().filter((hero) =>
       hero.name.toLowerCase().includes(name.toLowerCase())
     );
     return of(filteredSuperheroes).pipe(delay(300));
+  }
+
+  getSuperheroById(id: string): Observable<superheroe | undefined> {
+    const superhero = this.superheroes_mock().find((hero) => hero.id === id);
+    return of(superhero).pipe(delay(300));
   }
 
   createSuperhero(newSuperhero: superheroe): Observable<{ success: boolean }> {
