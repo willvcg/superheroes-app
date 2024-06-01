@@ -1,5 +1,6 @@
 import { AsyncPipe, JsonPipe } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,7 +9,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { delay } from 'rxjs';
 import { DialogComponent } from '../../../components/dialog/dialog-animations-example-dialog';
 import { SuperheroesService } from '../../../services/superheroes.service';
 @Component({
@@ -24,6 +24,7 @@ import { SuperheroesService } from '../../../services/superheroes.service';
     MatFormFieldModule,
     RouterLink,
     MatProgressSpinnerModule,
+    FormsModule,
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
@@ -34,19 +35,20 @@ export class ListComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly dialog = inject(MatDialog);
 
-  protected users$ = computed(() =>
-    this.superheroesService.getUsers().pipe(delay(1000))
+  protected searchValue = signal<string>('');
+  protected users$ = computed(() => {
+    const searchValue = this.searchValue();
+    if (searchValue) {
+      return this.superheroesService.getSuperhero(searchValue);
+    }
+    return this.superheroesService.getSuperheroes();
+  });
+
+  protected user$ = computed(() =>
+    this.superheroesService.getSuperhero('Batman')
   );
 
-  protected user$ = computed(() => this.superheroesService.getUser());
-
-  protected createUser$ = computed(() => this.superheroesService.createUser());
-
-  protected modifyUser$ = computed(() => this.superheroesService.modifyUser());
-
-  protected deleteUser$ = computed(() => this.superheroesService.deleteUser());
-
-  protected goEdit(id: number): void {
+  protected goEdit(id: string): void {
     this.router.navigate(['../edit', id], {
       relativeTo: this.route,
     });
@@ -61,13 +63,18 @@ export class ListComponent {
   protected openDialog(
     enterAnimationDuration: string,
     exitAnimationDuration: string,
-    id: number
+    id: string,
+    name: string
   ): void {
     this.dialog.open(DialogComponent, {
       width: '250px',
       enterAnimationDuration,
       exitAnimationDuration,
-      data: { id },
+      data: {
+        id,
+        name,
+        message: `¿Estás seguro de que quieres borrar ${name}?`,
+      },
     });
   }
 }
